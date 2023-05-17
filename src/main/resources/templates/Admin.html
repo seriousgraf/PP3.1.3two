@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control Users</title>
+    <style>
+        .user {
+            margin-bottom: 10px;
+        }
+
+        .user__info {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .user__actions {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div th:each="user : ${users}" class="user">
+    <div class="user__info">
+        <p><strong>Username:</strong> <span th:text="${user.getUsername()}">Username</span></p>
+        <p><strong>Password:</strong> <span th:text="${user.getPassword()}">Password</span></p>
+        <p><strong>Email:</strong> <span th:text="${user.getEmail()}">Email</span></p>
+    </div>
+    <div class="user__actions">
+        <a th:href="@{/admin/user-page/{id}(id=${user.getId()})}" class="button">View</a>
+    </div>
+</div>
+
+<div sec:authorize="hasRole('ADMIN')">
+    <form action="/admin/new" method="GET">
+        <input type="submit" value="Add user" />
+    </form>
+</div>
+<form th:method="GET" th:action="@{/user/user-page}">
+    <input type="submit" value="My Page"/>
+</form>
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>
