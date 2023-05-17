@@ -23,7 +23,7 @@ public class AdminController {
     @GetMapping("/user-page/{id}")
     public String selectUser(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userServiceImpl.fineOne(id).get());
-        return "User";
+        return "showUser";
     }
 
     @GetMapping("/new")
