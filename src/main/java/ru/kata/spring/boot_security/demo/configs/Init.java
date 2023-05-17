@@ -24,11 +24,19 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
         this.userRepository = userRepository;
     }
 
-    @Autowired
-    private RoleRepository roleRepository;
 
+    private RoleRepository roleRepository;
     @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
+
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    public Init(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
