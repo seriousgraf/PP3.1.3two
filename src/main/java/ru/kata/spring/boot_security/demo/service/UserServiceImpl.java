@@ -25,7 +25,8 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    @Override
+    @Transactional
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -40,23 +41,32 @@ public class UserServiceImpl implements UserService {
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getAuthority()));
     }
-
+    @Override
+    @Transactional
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
     }
 
-    public Optional<User> fineOne(int id) {
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findUserById(int id) {
         return userRepository.findById(id);
     }
 
+    @Override
+    @Transactional
     public void saveUser(User user) {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
     public void edit(int id, User updatedUser) {
         Optional<User> toChange = userRepository.findById(id);
 
@@ -68,6 +78,8 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         }
     }
+    @Override
+    @Transactional(readOnly = true)
     public List<User> allUsers() {
         return userRepository.findAll();
     }

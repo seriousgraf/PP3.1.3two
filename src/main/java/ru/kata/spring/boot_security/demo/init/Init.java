@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.kata.spring.boot_security.demo.init;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -10,8 +10,8 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class Init implements ApplicationListener<ContextRefreshedEvent> {
@@ -26,13 +26,15 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
 
 
     private RoleRepository roleRepository;
+
     @Autowired
     public void setRoleRepository(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public Init(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -50,8 +52,10 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
         Role adminRole = new Role();
         adminRole.setRole("ROLE_ADMIN");
 
-        List<Role> userRoles = Arrays.asList(userRole);
-        List<Role> adminRoles = Arrays.asList(adminRole);
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(userRole);
+        Set<Role> adminRoles = new HashSet<>();
+        adminRoles.add(adminRole);
 
         User user = new User();
         user.setUsername("user");

@@ -13,8 +13,11 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
 
+    private final UserServiceImpl userServiceImpl;
     @Autowired
-    private UserServiceImpl userServiceImpl;
+    public UserController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @GetMapping("/user-page")
     public String userPage(Principal principal, Model model) {

@@ -11,23 +11,26 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final UserServiceImpl userServiceImpl;
     @Autowired
-    private UserServiceImpl userServiceImpl;
+    public AdminController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @GetMapping()
-    public String userList(Model model) {
+    public String showAllUsers(Model model) {
         model.addAttribute("users", userServiceImpl.allUsers());
         return "Admin";
     }
 
     @GetMapping("/user-page/{id}")
-    public String selectUser(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userServiceImpl.fineOne(id).get());
+    public String findUserById(Model model, @PathVariable("id") int id) {
+        model.addAttribute("user", userServiceImpl.findUserById(id).get());
         return "showUser";
     }
 
     @GetMapping("/new")
-    public String newUser(Model model) {
+    public String showAddUserPage(Model model) {
         model.addAttribute("user", new User());
 
         return "NewUser";
@@ -40,14 +43,14 @@ public class AdminController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateUser(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userServiceImpl.fineOne(id).get());
+    public String showUpdateUserPage(Model model, @PathVariable("id") int id) {
+        model.addAttribute("user", userServiceImpl.findUserById(id).get());
         return "EditUser";
     }
 
     @PatchMapping("/update/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
-        User oldUser = userServiceImpl.fineOne(id).get();
+    public String updateUser(@ModelAttribute("user") User user, @PathVariable("id") int id) {
+        User oldUser = userServiceImpl.findUserById(id).get();
         oldUser.setUsername(user.getUsername());
         oldUser.setPassword(user.getPassword());
         oldUser.setEmail(user.getEmail());
@@ -56,7 +59,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable("id") int id) {
+    public String deleteUser(@PathVariable("id") int id) {
         userServiceImpl.deleteUser(id);
         return "redirect:/admin";
     }

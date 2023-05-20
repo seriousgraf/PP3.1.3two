@@ -15,12 +15,11 @@ public interface UserService extends UserDetailsService {
 
     public User findByUsername(String username);
 
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles);
 
-    public Optional<User> fineOne(int id);
+    public Optional<User> findUserById(int id);
 
     public void saveUser(User user);
 

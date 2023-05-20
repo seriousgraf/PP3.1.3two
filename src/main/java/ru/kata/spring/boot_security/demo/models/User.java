@@ -6,8 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -32,7 +31,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Collection<Role> authority;
+    private Set<Role> authority;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -46,7 +45,7 @@ public class User implements UserDetails {
 
     public void addRoleToUser(Role role) {
         if (authority == null) {
-            authority = new ArrayList<>();
+            authority = new HashSet<>();
         }
         authority.add(role);
     }
@@ -100,11 +99,11 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public Collection<Role> getAuthority() {
+    public Set<Role> getAuthority() {
         return authority;
     }
 
-    public void setAuthority(Collection<Role> authority) {
+    public void setAuthority(Set<Role> authority) {
         this.authority = authority;
     }
 
@@ -114,6 +113,30 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(authority, user.authority);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, password, username, email, authority);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", authority=" + authority +
+                '}';
     }
 }
 
